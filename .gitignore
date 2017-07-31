@@ -4,3 +4,4 @@ htmlcov/
 venv/
 gocd2gmail2slack.sublime-project
 gocd2gmail2slack.sublime-workspace
+gocd/
