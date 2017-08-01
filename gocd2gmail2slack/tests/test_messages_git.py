@@ -17,6 +17,9 @@ from messages_git import (
 
 from fixtures.gmail_message_detail_1_git import (
     MESSAGE1,
+    CHANGESET_MSG_ON_INDIVIDUAL_LINE,
+    CHANGESET_MSG_INLINE_WITH_REVISION,
+    CHANGESET_MSG_INLINE_WITH_REVISION_AND_AFFECTED_FILE,
 )
 
 
@@ -53,20 +56,20 @@ class MessageBodyTests(unittest.TestCase):
         actual = get_changeset_id(body)
         self.assertEqual('49af92bdc06d2ccb3b193e96fd76c78a6ad4554b', actual)
 
-    # def test_get_changeset_comment_from_individual_line(self):
-    #     body = get_body(CHANGESET_MSG_ON_INDIVIDUAL_LINE)
-    #     actual = get_changeset_comment(body)
-    #     self.assertEqual('cloud config changes', actual)
+    def test_get_changeset_comment_from_individual_line(self):
+        body = get_body(CHANGESET_MSG_ON_INDIVIDUAL_LINE)
+        actual = get_changeset_comment(body)
+        self.assertEqual('cloud config changes', actual)
 
-    # def test_get_changeset_comment_inline_with_revision(self):
-    #     body = get_body(CHANGESET_MSG_INLINE_WITH_REVISION)
-    #     actual = get_changeset_comment(body)
-    #     self.assertEqual('cloud config changes', actual)
+    def test_get_changeset_comment_inline_with_revision(self):
+        body = get_body(CHANGESET_MSG_INLINE_WITH_REVISION)
+        actual = get_changeset_comment(body)
+        self.assertEqual('cloud config changes', actual)
 
-    # def test_get_changeset_comment_inline_with_revision_affected_file(self):
-    #     body = get_body(CHANGESET_MSG_INLINE_WITH_REVISION_AND_AFFECTED_FILE)
-    #     actual = get_changeset_comment(body)
-    #     self.assertEqual('cloud config changes', actual)
+    def test_get_changeset_comment_inline_with_revision_affected_file(self):
+        body = get_body(CHANGESET_MSG_INLINE_WITH_REVISION_AND_AFFECTED_FILE)
+        actual = get_changeset_comment(body)
+        self.assertEqual('cloud config changes', actual)
 
     def test_get_changeset_author(self):
         body = get_body(MESSAGE1)
