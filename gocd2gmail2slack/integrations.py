@@ -1,12 +1,17 @@
 
 import gmail as Gm
-import messages as Msg
 import slack
 
 from cfg.config import (
     WEBHOOK_URL,
     GOCD_DASHBOARD_URL,
+    VERSION_CONTROL_TYPE
 )
+
+if VERSION_CONTROL_TYPE == 'GIT':
+    import messages as Msg
+else:
+    import messages_git as Msg
 
 
 def main():

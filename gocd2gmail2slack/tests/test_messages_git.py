@@ -3,8 +3,8 @@ import pdb
 
 from messages_git import (
     get_subject,
-    # is_gocd_pattern,
-    # get_gocd_details,
+    is_gocd_pattern,
+    get_gocd_details,
     get_timestamp,
     get_id,
     get_body,
@@ -83,3 +83,34 @@ class MessageBodyTests(unittest.TestCase):
                     'url': 'https://code@code.domain.com/product/_git/repository/commit/49af92bdc06d2ccb3b193e96fd76c78a6ad4554b'}
         actual = get_changeset_info(body)
         self.assertDictEqual(expected, actual)
+
+class GocdDetailsTests(unittest.TestCase):
+
+    def test_check_gocd_subject_pattern_valid(self):
+        subjects = ['FW: Stage [proDuct.branch.CI/100/Package/1] passed',
+                    'FW: Stage [product.branch.CI/0/Package/2] is fixed',
+                    'Stage [product.braNch.Deploy.Test0/212/Package/1] passed',
+                    'Stage [product2.branch2.CI/10999/Package/1] failed',
+                    'Stage [prod.bch.Deploy.Test0/212/Package/1] is broken']
+        for subject in subjects:
+            self.assertTrue(is_gocd_pattern(subject))
+
+    def test_check_gocd_subject_pattern_invalid(self):
+        subjects = ['FW: Stage [product.branch.CI/100/Package/1] unknown',
+                    'Stage [product.branch.CI/a/Package/1] passed']
+        for subject in subjects:
+            self.assertFalse(is_gocd_pattern(subject))
+
+    def test_get_gocd_details(self):
+        subject = 'FW: Stage [pr0duct5.br4nch.CI/100/Package/1] passed'
+        expected = {'pipeline': 'pr0duct5.br4nch.CI',
+                    'stage': 'Package',
+                    'status': 'passed'}
+        self.assertEqual(expected, get_gocd_details(subject))
+
+    def test_get_gocd_details_status_2_words(self):
+        subject = 'FW: Stage [pr0duct5.br4nch.CI/0/Package/2] is fixed'
+        expected = {'pipeline': 'pr0duct5.br4nch.CI',
+                    'stage': 'Package',
+                    'status': 'is fixed'}
+        self.assertEqual(expected, get_gocd_details(subject))
