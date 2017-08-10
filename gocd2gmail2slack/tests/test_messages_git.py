@@ -48,7 +48,7 @@ class MessageBodyTests(unittest.TestCase):
     def test_get_changeset_url(self):
         body = get_body(MESSAGE1)
         actual = get_changeset_url(body)
-        expected = 'https://code@code.domain.com/product/_git/repository/commit/49af92bdc06d2ccb3b193e96fd76c78a6ad4554b'
+        expected = 'https://code.domain.com/product/_git/repository/commit/49af92bdc06d2ccb3b193e96fd76c78a6ad4554b'
         self.assertEqual(expected, actual)
 
     def test_get_changeset_id(self):
@@ -74,13 +74,13 @@ class MessageBodyTests(unittest.TestCase):
     def test_get_changeset_author(self):
         body = get_body(MESSAGE1)
         actual = get_changeset_author(body)
-        self.assertEqual('committer', actual)
+        self.assertEqual('DOMAIN\\\\committer', actual)
 
     def test_get_changeset_info(self):
         body = get_body(MESSAGE1)
-        expected = {'id': '49af92bdc06d2ccb3b193e96fd76c78a6ad4554b', 'author': 'committer',
+        expected = {'id': '49af92bdc06d2ccb3b193e96fd76c78a6ad4554b', 'author': 'DOMAIN\\\\committer',
                     'comment': 'cloud config changes',
-                    'url': 'https://code@code.domain.com/product/_git/repository/commit/49af92bdc06d2ccb3b193e96fd76c78a6ad4554b'}
+                    'url': 'https://code.domain.com/product/_git/repository/commit/49af92bdc06d2ccb3b193e96fd76c78a6ad4554b'}
         actual = get_changeset_info(body)
         self.assertDictEqual(expected, actual)
 

@@ -5,6 +5,7 @@ import requests
 from cfg.config import (
     CI_STAGES,
     DEPLOY_STAGES,
+    VERSION_CONTROL_TYPE
 )
 
 
@@ -13,6 +14,11 @@ def send_to_slack(body, webhook_url):
 
 
 def message_builder(gocd_details, changeset, dashboard_url):
+
+    if VERSION_CONTROL_TYPE == 'GIT':
+        changesetLabel = 'Commit'
+    else:
+        changesetLabel = 'Changeset'
 
     pipeline = gocd_details['pipeline']
     stage = gocd_details['stage']
@@ -32,8 +38,9 @@ def message_builder(gocd_details, changeset, dashboard_url):
             'text': '<{0}|{1}>'.format(pipeline_url, pipeline)}
 
     if stage in CI_STAGES:
-        body['text'] += ('\nChangeset: <{0}|{1}> - {2}: {3}'
-                         ''.format(changeset['url'],
+        body['text'] += ('\n{0}: <{1}|{2}> - {3}: {4}'
+                         ''.format(changesetLabel,
+                                   changeset['url'],
                                    changeset['id'],
                                    changeset['author'],
                                    changeset['comment']))

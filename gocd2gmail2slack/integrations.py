@@ -9,9 +9,9 @@ from cfg.config import (
 )
 
 if VERSION_CONTROL_TYPE == 'GIT':
-    import messages as Msg
-else:
     import messages_git as Msg
+else:
+    import messages as Msg
 
 
 def main():
