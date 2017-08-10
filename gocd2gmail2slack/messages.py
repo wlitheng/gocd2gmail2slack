@@ -57,6 +57,12 @@ def get_changeset_info(body):
     return result
 
 
+def get_changeset_info_multiple(body):
+    results = []
+    results.append(get_changeset_info(body))
+    return results
+
+
 def get_changeset_url(body):
     match = re.search(BASE_TFS_URL_PATTERN, body)
     if match:

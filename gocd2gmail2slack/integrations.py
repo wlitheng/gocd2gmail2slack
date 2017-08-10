@@ -39,11 +39,11 @@ def process(service, labels, messages_details):
 
             if slack.is_matching_send_rule(gocd_details):
                 body = Msg.get_body(item)
-                changeset = Msg.get_changeset_info(body)
+                changesets = Msg.get_changeset_info_multiple(body)
                 text = (slack
-                        .message_builder(gocd_details,
-                                         changeset,
-                                         GOCD_DASHBOARD_URL))
+                        .message_builder_multiple_changesets(gocd_details,
+                                                             changesets,
+                                                             GOCD_DASHBOARD_URL))
 
                 slack.send_to_slack(text, WEBHOOK_URL)
 

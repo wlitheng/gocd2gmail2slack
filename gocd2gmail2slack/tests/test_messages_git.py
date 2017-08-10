@@ -13,6 +13,7 @@ from messages_git import (
     get_changeset_comment,
     get_changeset_author,
     get_changeset_info,
+    get_changeset_info_multiple,
 )
 
 from fixtures.gmail_message_detail_1_git import (
@@ -20,6 +21,7 @@ from fixtures.gmail_message_detail_1_git import (
     CHANGESET_MSG_ON_INDIVIDUAL_LINE,
     CHANGESET_MSG_INLINE_WITH_REVISION,
     CHANGESET_MSG_INLINE_WITH_REVISION_AND_AFFECTED_FILE,
+    CHANGESET_MSG_MULTIPLE_COMMITS,
 )
 
 
@@ -83,6 +85,20 @@ class MessageBodyTests(unittest.TestCase):
                     'url': 'https://code.domain.com/product/_git/repository/commit/49af92bdc06d2ccb3b193e96fd76c78a6ad4554b'}
         actual = get_changeset_info(body)
         self.assertDictEqual(expected, actual)
+
+    def test_get_changeset_info_multiple(self):
+        body = get_body(CHANGESET_MSG_MULTIPLE_COMMITS)
+        expected = [{'id': 'a0df2066', 'author': 'Joey JoJo Shabadoo Jr',
+                    'comment': 'This is comment #1',
+                    'url': 'https://code.domain.com/product/_git/repository/commit/a0df2066abdef4bc29fb17049659577a347aab6a'},
+                    {'id': 'a0df2067', 'author': 'DOMAIN\\\\User',
+                    'comment': 'This is comment #2',
+                    'url': 'https://code.domain.com/product/_git/repository/commit/a0df2067abdef4bc29fb17049659577a347aab6b'},
+                    {'id': 'a0df2068', 'author': 'FredNoEmail',
+                    'comment': 'This is comment #3',
+                    'url': 'https://code.domain.com/product/_git/repository/commit/a0df2068abdef4bc29fb17049659577a347aab6c'}]
+        actual = get_changeset_info_multiple(body)
+        self.assertListEqual(expected, actual)
 
 class GocdDetailsTests(unittest.TestCase):
 

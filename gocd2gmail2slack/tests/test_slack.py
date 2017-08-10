@@ -11,6 +11,7 @@ from slack import (
     is_matching_send_rule,
     get_pipeline_url,
     message_builder,
+    message_builder_multiple_changesets,
 )
 
 TEST_WEBHOOK_URL = 'https://web.hook.url/123/456'
@@ -56,6 +57,33 @@ class MessageBuilderTests(unittest.TestCase):
 
                 'changeset': changeset, 'dashboard_url': dashboard_url}
 
+    @staticmethod
+    def factory_multiple_changesets(pipeline='pipe1', stage='stage1', status='status1',
+                changesets=[{'id': '12345', 'url': 'http://url/1', 'author': 'abc', 'comment': 'fixed'},
+                            {'id': '67890', 'url': 'http://url/2', 'author': 'def', 'comment': 'stuff'},
+                            {'id': '01234', 'url': 'http://url/3', 'author': 'ghi', 'comment': 'dunno'}],
+                dashboard_url='http://dash'):
+
+        return {'gocd_details': {'pipeline': pipeline,
+                                 'stage': stage, 'status': status},
+
+                'changesets': changesets, 'dashboard_url': dashboard_url}
+
+    @staticmethod
+    def factory_six_changesets(pipeline='pipe1', stage='stage1', status='status1',
+                changesets=[{'id': '001', 'url': 'http://url/1', 'author': 'abc1', 'comment': 'comment1'},
+                            {'id': '002', 'url': 'http://url/2', 'author': 'abc2', 'comment': 'comment2'},
+                            {'id': '003', 'url': 'http://url/3', 'author': 'abc3', 'comment': 'comment3'},
+                            {'id': '004', 'url': 'http://url/4', 'author': 'abc4', 'comment': 'comment4'},
+                            {'id': '005', 'url': 'http://url/5', 'author': 'abc5', 'comment': 'comment5'},
+                            {'id': '006', 'url': 'http://url/6', 'author': 'abc6', 'comment': 'comment6'}],
+                dashboard_url='http://dash'):
+
+        return {'gocd_details': {'pipeline': pipeline,
+                                 'stage': stage, 'status': status},
+
+                'changesets': changesets, 'dashboard_url': dashboard_url}
+
     def test_tick_icon_for_passing_build(self):
         params = self.factory(stage='package', status='passed')
         body = message_builder(**params)
@@ -80,6 +108,18 @@ class MessageBuilderTests(unittest.TestCase):
         for stage in TEST_CI_STAGES:
             params = self.factory(stage=stage, status='passed')
             body = message_builder(**params)
+            self.assertIn('Changeset:', body['text'])
+
+    def test_include_multiple_changesets_for_ci_stages(self):
+        for stage in TEST_CI_STAGES:
+            params = self.factory_multiple_changesets(stage=stage, status='passed')
+            body = message_builder_multiple_changesets(**params)
+            self.assertIn('Changeset:', body['text'])
+
+    def test_include_multiple_changesets_for_ci_stages_commits_truncated(self):
+        for stage in TEST_CI_STAGES:
+            params = self.factory_six_changesets(stage=stage, status='passed')
+            body = message_builder_multiple_changesets(**params)
             self.assertIn('Changeset:', body['text'])
 
     def test_exclude_changeset_for_deploy_stages(self):
