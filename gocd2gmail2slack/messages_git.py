@@ -13,12 +13,12 @@ REVISION_PATTERN = (r"revision: (\w+), "
                     r"on (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d+)\s*"
                     r"([\s\S]*?)\s*modified ")
 
-GIT_PATTERN_MULTIPLE_COMMITS = (r"Git: ssh:\/\/(?:.*?@)?(.*?)\\r\\n"                 # URL
-                                r"revision: (\w+), "                                 # Commit hash
-                                r"modified by (.*?) "                                # User
-                                r"\<(.*?)\> "                                        # Email
-                                r"on (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d+)\s*"   # Date/time
-                                r"([\s\S]*?)\s*(?:modified|added|removed) ")         # Comment
+GIT_PATTERN_MULTIPLE_COMMITS = (r"Git: ssh:\/\/(?:.*?@)?(.*?)\\r\\n"                    # URL
+                                r"revision: (\w+), "                                    # Commit hash
+                                r"modified by (.*?) "                                   # User
+                                r"\<(.*?)\> "                                           # Email
+                                r"on (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d+)\s*"      # Date/time
+                                r"([\s\S]*?)\s*(?:modified|added|removed|Merge) ")      # Comment
 					
 def get_subject(message):
     for header in message['payload']['headers']:

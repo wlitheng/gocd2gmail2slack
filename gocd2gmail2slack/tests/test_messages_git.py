@@ -22,6 +22,7 @@ from fixtures.gmail_message_detail_1_git import (
     CHANGESET_MSG_INLINE_WITH_REVISION,
     CHANGESET_MSG_INLINE_WITH_REVISION_AND_AFFECTED_FILE,
     CHANGESET_MSG_MULTIPLE_COMMITS,
+    CHANGESET_MSG_MULTIPLE_COMMITS_WITHMERGE,
 )
 
 
@@ -97,6 +98,20 @@ class MessageBodyTests(unittest.TestCase):
                     {'id': 'a0df2068', 'author': 'FredNoEmail',
                     'comment': 'This is comment #3',
                     'url': 'https://code.domain.com/product/_git/repository/commit/a0df2068abdef4bc29fb17049659577a347aab6c'}]
+        actual = get_changeset_info_multiple(body)
+        self.assertListEqual(expected, actual)
+
+    def test_get_changeset_info_multiple_withmerge(self):
+        body = get_body(CHANGESET_MSG_MULTIPLE_COMMITS_WITHMERGE)
+        expected = [{'id': '1826859c', 'author': 'Fred Bloggs',
+                    'comment': '',
+                    'url': 'https://code.domain.com/product/_git/repository/commit/1826859ce5884515e455ab653077b8be104bead3'},
+                    {'id': '93c02b5a', 'author': 'Oliver Nutherwun',
+                    'comment': 'hotfix to fix stuff that was broken',
+                    'url': 'https://code.domain.com/product/_git/repository/commit/93c02b5a8b63179037fd78f02184df6dea52c141'},
+                    {'id': '4f7427cd', 'author': 'Brendan Butter',
+                    'comment': 'Update Database Storage',
+                    'url': 'https://code.domain.com/product/_git/repository/commit/4f7427cdd4181f8a4767481caad6c2529cfc1ee3'}]
         actual = get_changeset_info_multiple(body)
         self.assertListEqual(expected, actual)
 
