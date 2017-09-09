@@ -76,15 +76,20 @@ def message_builder_multiple_changesets(gocd_details, changesets, dashboard_url)
             'text': '<{0}|{1}>'.format(pipeline_url, pipeline)}
 
     max_changesets = 3
+    max_comment_length = 100
     if stage in CI_STAGES:
         index = 1
         for changeset in changesets[:max_changesets]:
-            body['text'] += ('\n{0}: <{1}|{2}> - {3}: {4}'
+            # Cap comment at 100 chars max
+            comment = changeset['comment']
+            if len(comment) > max_comment_length:
+                comment = comment[:max_comment_length] + "..."
+            body['text'] += ('\n• {0}: <{1}|{2}> - *{3}*: {4}'
                              ''.format(changesetLabel,
                                        changeset['url'],
                                        changeset['id'],
                                        changeset['author'],
-                                       changeset['comment']))
+                                       comment))
             index = index + 1
         if len(changesets) > max_changesets:
             remaining_changesets = len(changesets) - max_changesets
