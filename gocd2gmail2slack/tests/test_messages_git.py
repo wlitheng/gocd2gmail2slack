@@ -104,7 +104,7 @@ class MessageBodyTests(unittest.TestCase):
     def test_get_changeset_info_multiple_withmerge(self):
         body = get_body(CHANGESET_MSG_MULTIPLE_COMMITS_WITHMERGE)
         expected = [{'id': '1826859c', 'author': 'Fred Bloggs',
-                    'comment': '',
+                    'comment': 'Merge branch \'hotfix/dostuff\' into develop',
                     'url': 'https://code.domain.com/product/_git/repository/commit/1826859ce5884515e455ab653077b8be104bead3'},
                     {'id': '93c02b5a', 'author': 'Oliver Nutherwun',
                     'comment': 'hotfix to fix stuff that was broken',

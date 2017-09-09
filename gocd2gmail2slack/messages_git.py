@@ -18,8 +18,9 @@ GIT_PATTERN_MULTIPLE_COMMITS = (r"Git: ssh:\/\/(?:.*?@)?(.*?)\\r\\n"            
                                 r"modified by (.*?) "                                   # User
                                 r"\<(.*?)\> "                                           # Email
                                 r"on (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d+)\s*"      # Date/time
-                                r"([\s\S]*?)\s*(?:modified|added|removed|Merge) ")      # Comment
-					
+                                r"([\s\S]*?)"                                           # Comment
+                                r"(?=(?:Git:)|(?:Sent))")                               # Delimiter for next commit
+
 def get_subject(message):
     for header in message['payload']['headers']:
         if header['name'] == 'Subject':
@@ -92,7 +93,13 @@ def get_changeset_comment(body):
         return clean_changeset_comment(comment)
 
 def clean_changeset_comment(comment):
-    return comment.replace("\\n", "").replace("\\r", "").strip()
+    # For multiline comments, get the first non-blank line
+    temp = comment.replace("\\n", "\n").replace("\\r", "\r").strip()
+    lines = temp.splitlines()
+    for line in lines:
+        strippedLine = line.strip()
+        if strippedLine:
+            return strippedLine
 
 def format_commit_url(base_url, changeset_id):
     #prepend https://
