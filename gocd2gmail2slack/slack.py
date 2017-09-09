@@ -75,7 +75,7 @@ def message_builder_multiple_changesets(gocd_details, changesets, dashboard_url)
             'icon_emoji': icon,
             'text': '<{0}|{1}>'.format(pipeline_url, pipeline)}
 
-    max_changesets = 3
+    max_changesets = 5
     max_comment_length = 100
     if stage in CI_STAGES:
         index = 1
@@ -84,7 +84,7 @@ def message_builder_multiple_changesets(gocd_details, changesets, dashboard_url)
             comment = changeset['comment']
             if len(comment) > max_comment_length:
                 comment = comment[:max_comment_length] + "..."
-            body['text'] += ('\n• {0}: <{1}|{2}> - *{3}*: {4}'
+            body['text'] += ('\n• {0}: <{1}|{2}> - {3}: {4}'
                              ''.format(changesetLabel,
                                        changeset['url'],
                                        changeset['id'],
