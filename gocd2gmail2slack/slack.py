@@ -33,7 +33,7 @@ def message_builder(gocd_details, changeset, dashboard_url):
     else:
         return
 
-    body = {'username': 'go build status - {0}'.format(status),
+    body = {'username': 'go build status - {0} (stage={1})'.format(status, stage),
             'icon_emoji': icon,
             'text': '<{0}|{1}>'.format(pipeline_url, pipeline)}
 
@@ -71,7 +71,7 @@ def message_builder_multiple_changesets(gocd_details, changesets, dashboard_url)
     else:
         return
 
-    body = {'username': 'go build status - {0}'.format(status),
+    body = {'username': 'go build status - {0} (stage={1})'.format(status, stage),
             'icon_emoji': icon,
             'text': '<{0}|{1}>'.format(pipeline_url, pipeline)}
 
