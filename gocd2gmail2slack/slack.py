@@ -106,8 +106,11 @@ def message_builder_multiple_changesets(gocd_details, changesets, dashboard_url)
 def is_matching_send_rule(gocd_details):
     if gocd_details['status'] in ['failed', 'is broken']:
         return True
-    if gocd_details['status'] in ['passed', 'is fixed']:
+    if gocd_details['status'] in ['passed']:
         if gocd_details['stage'] in ['Package', 'package'] + DEPLOY_STAGES:
+            return True
+    if gocd_details['status'] in ['is fixed']:
+        if gocd_details['stage'] in ['Package', 'package', 'AcceptanceTest'] + DEPLOY_STAGES:
             return True
     else:
         return False
