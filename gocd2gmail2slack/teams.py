@@ -35,35 +35,33 @@ def message_builder(gocd_details, changeset, dashboard_url):
 
     if status in ['passed', 'is fixed']:
         icon = passed_icon()
+        theme_color = '1fb25a'
     elif status in ['failed', 'is broken']:
         icon = failed_icon()
+        theme_color = 'ff0000'
     else:
         return
 
     body_text = ''
     if stage in CI_STAGES:
-         body_text += ('\n{0}: <{1}|{2}> - {3}: {4}'
+         body_text += ('{0}: [{1}]({2}) - {3}: {4}'
                        ''.format(changesetLabel,
-                                 changeset['url'],
                                  changeset['id'],
+                                 changeset['url'],
                                  changeset['author'],
                                  changeset['comment']))
 
     if status in ['failed', 'is broken']:
-         body_text += '\nStage: ' + stage
+         body_text += '\n\nStage: ' + stage
 
     body = {'@context': 'http://schema.org/extensions',
             '@type': 'MessageCard',
-            'themeColor': 'ff0000',
-            'summary': 'Workflow15.CI',
+            'themeColor': theme_color,
+            'summary': pipeline,
             'sections': [{'activityTitle': 'go build status - {0} (stage={1})'.format(status, stage),
-                          'activitySubtitle': pipeline,
+                          'activitySubtitle': '[{0}]({1})'.format(pipeline, pipeline_url),
                           'activityImage': icon,
-                          'text': body_text }],
-            'potentialAction': [{'@type': 'OpenUri',
-                                 'name': 'Open Pipeline',
-                                 'targets': [{'os': 'default',
-                                              'uri': '{0}'.format(pipeline_url)}]}]}
+                          'text': body_text }]}
  
     return body
 
@@ -83,8 +81,10 @@ def message_builder_multiple_changesets(gocd_details, changesets, dashboard_url)
 
     if status in ['passed', 'is fixed']:
         icon = passed_icon()
+        theme_color = '1fb25a'
     elif status in ['failed', 'is broken']:
         icon = failed_icon()
+        theme_color = 'ff0000'
     else:
         return
 
@@ -98,31 +98,29 @@ def message_builder_multiple_changesets(gocd_details, changesets, dashboard_url)
             comment = changeset['comment']
             if len(comment) > max_comment_length:
                 comment = comment[:max_comment_length] + "..."
-            body_text += ('\n• {0}: <{1}|{2}> - {3}: {4}'
-                          ''.format(changesetLabel,
-                                    changeset['url'],
+            if len(body_text) > 0:
+                body_text += '\n\n'
+            body_text += ('{0}: [{1}]({2}) - {3}: {4}'
+                        ''.format(changesetLabel,
                                     changeset['id'],
+                                    changeset['url'],
                                     changeset['author'],
                                     comment))
             index = index + 1
         if len(changesets) > max_changesets:
             remaining_changesets = len(changesets) - max_changesets
-            body_text += ('\n_And {0} more {1}(s)_'
+            body_text += ('\n\n_And {0} more {1}(s)_'
                           ''.format(remaining_changesets,
                                     changesetLabel.lower()))
 
     body = {'@context': 'http://schema.org/extensions',
             '@type': 'MessageCard',
-            'themeColor': 'ff0000',
-            'summary': 'Workflow15.CI',
+            'themeColor': theme_color,
+            'summary': pipeline,
             'sections': [{'activityTitle': 'go build status - {0} (stage={1})'.format(status, stage),
-                          'activitySubtitle': pipeline,
+                          'activitySubtitle': '[{0}]({1})'.format(pipeline, pipeline_url),
                           'activityImage': icon,
-                          'text': body_text }],
-            'potentialAction': [{'@type': 'OpenUri',
-                                 'name': 'Open Pipeline',
-                                 'targets': [{'os': 'default',
-                                              'uri': '{0}'.format(pipeline_url)}]}]}
+                          'text': body_text }]}
     
     return body
 
