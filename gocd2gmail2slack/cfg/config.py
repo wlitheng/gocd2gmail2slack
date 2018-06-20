@@ -1,6 +1,8 @@
 
 WEBHOOK_URL = ''
 
+TEAMS_WEBHOOK_URL = ''
+
 GOCD_DASHBOARD_URL = ''
 
 CI_STAGES = ['']

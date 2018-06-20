@@ -1,9 +1,11 @@
 
 import gmail as Gm
 import slack
+import teams
 
 from cfg.config import (
     WEBHOOK_URL,
+    TEAMS_WEBHOOK_URL,
     GOCD_DASHBOARD_URL,
     VERSION_CONTROL_TYPE
 )
@@ -31,6 +33,10 @@ def initialize():
 
 
 def process(service, labels, messages_details):
+    process_teams(service, labels, messages_details)
+
+
+def process_slack(service, labels, messages_details):
     for item in messages_details:
         subject = Msg.get_subject(item)
 
@@ -54,5 +60,28 @@ def process(service, labels, messages_details):
                         'UNREAD', labels)
 
 
+def process_teams(service, labels, messages_details):
+    for item in messages_details:
+        subject = Msg.get_subject(item)
+
+        if Msg.is_gocd_pattern(subject):
+            gocd_details = Msg.get_gocd_details(subject)
+
+            if teams.is_matching_send_rule(gocd_details):
+                body = Msg.get_body(item)
+                changesets = Msg.get_changeset_info_multiple(body)
+                text = (teams
+                        .message_builder_multiple_changesets(gocd_details,
+                                                             changesets,
+                                                             GOCD_DASHBOARD_URL))
+
+                teams.send_to_teams(text, TEAMS_WEBHOOK_URL)
+
+                Gm.add_label(service, Msg.get_id(item),
+                             'SENT_TO_SLACK', labels)
+
+        Gm.remove_label(service, Msg.get_id(item),
+                        'UNREAD', labels)
+                        
 if __name__ == "__main__":
     main()
