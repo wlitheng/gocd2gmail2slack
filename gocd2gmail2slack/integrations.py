@@ -7,7 +7,8 @@ from cfg.config import (
     WEBHOOK_URL,
     TEAMS_WEBHOOK_URL,
     GOCD_DASHBOARD_URL,
-    VERSION_CONTROL_TYPE
+    VERSION_CONTROL_TYPE,
+    INTEGRATION_TYPE
 )
 
 if VERSION_CONTROL_TYPE == 'GIT':
@@ -33,7 +34,10 @@ def initialize():
 
 
 def process(service, labels, messages_details):
-    process_teams(service, labels, messages_details)
+    if INTEGRATION_TYPE == 'TEAMS':
+        process_teams(service, labels, messages_details)
+    else:
+        process_slack(service, labels, messages_details)
 
 
 def process_slack(service, labels, messages_details):
@@ -78,7 +82,7 @@ def process_teams(service, labels, messages_details):
                 teams.send_to_teams(text, TEAMS_WEBHOOK_URL)
 
                 Gm.add_label(service, Msg.get_id(item),
-                             'SENT_TO_SLACK', labels)
+                             'SENT_TO_TEAMS', labels)
 
         Gm.remove_label(service, Msg.get_id(item),
                         'UNREAD', labels)

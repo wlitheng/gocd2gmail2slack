@@ -60,6 +60,7 @@ LABELS = {'labels': [
                 'messageListVisibility': 'hide',
                 },
             {'type': 'user', 'name': 'SENT_TO_SLACK', 'id': 'Label_3'},
+            {'type': 'user', 'name': 'SENT_TO_TEAMS', 'id': 'Label_4'},
             {
                 'labelListVisibility': 'labelHide',
                 'type': 'system',

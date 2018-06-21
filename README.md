@@ -24,7 +24,7 @@ then maybe this solution is acceptable. Nevertheless, it was a good learning exe
 6. Paste the ```client_secret.json``` from Step 1 into the ```cfg``` [folder](https://github.com/azam-a/gocd2gmail2slack/blob/master/gocd2gmail2slack/cfg/)
 7. ```cd``` into the ```gocd2gmail2slack``` directory (which contains ```integrations.py```)
 8. (optional) To run tests, run ```python -m unittest``` from the same directory as Step 7
-9. Create a Gmail label ```'SENT_TO_SLACK'``` at the intended Gmail account
+9. Create Gmail labels ```'SENT_TO_SLACK'``` and ```'SENT_TO_TEAMS'`` at the intended Gmail account
 10. run ```python integrations.py```
 11. The first run will open a browser to authenticate and authorize a Gmail account
 12. The credentials will be saved to ```cfg/cred/saved_credentials.json``` for subsequent runs
